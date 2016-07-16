@@ -1,0 +1,18 @@
+# Hidden files and folders
+.*
+!.gitignore
+!.gitattributes
+!.gitlab-ci.yml
+_*
+
+# Temporary files
+notebooks/*/**
+
+# Keep downloads
+downloads/*
+!downloads/*.gz
+!downloads/*.zip
+
+# Keep output
+output/*
+!output/*.gz
