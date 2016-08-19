@@ -200,74 +200,6 @@ def _print_stats(timepoint, mmc3_df):
         ][unique_cols].dropna(how='any').drop_duplicates().shape)
 
 
-# === Working with interface PDB mutations ===
-
-def get_partner_chain(protein, pdb_chain):
-    """
-    Examples
-    --------
-    >>> get_partner_chain('1CSE_E_I', 'E_A1C')
-    'I'
-    """
-    _, chain1, chain2 = protein.split('_')
-    if len(chain1) > len(chain2):
-        chain2 = chain2 + chain2[-1] * (len(chain1) - len(chain2))
-    if len(chain2) > len(chain1):
-        chain1 = chain1 + chain1[-1] * (len(chain2) - len(chain1))
-    for a, b in zip(chain1, chain2):
-        if a == pdb_chain:
-            return b
-        if b == pdb_chain:
-            return a
-    print(protein, pdb_chain, chain1, chain2)
-    raise Exception
-
-
-def get_core_mutation_features(index, mutation_json):
-    df = pd.DataFrame(mutation_json)
-    if 'idxs' in df.columns:
-        df = df[df['idxs'].isnull()]
-    if df.empty:
-        return None
-    df.index = [index] * df.shape[0]
-    return df
-
-
-mutation_not_in_interface = 0
-mutation_interface_not_found = 0
-
-
-def guess_interface_mutation_features(index, mutation_json):
-    global mutation_not_in_interface
-    global mutation_interface_not_found
-    
-    df = pd.DataFrame(mutation_json)
-    if 'idxs' not in df.columns:
-        mutation_not_in_interface += 1
-        return None
-    df = df[df['idxs'].notnull()]
-    df.index = [index] * df.shape[0]
-    if df.empty:
-        mutation_interface_not_found += 1
-    return df
-
-
-def get_interface_mutation_features(index, idxs, mutation_json):
-    global mutation_not_in_interface
-    global mutation_interface_not_found
-    
-    df = pd.DataFrame(mutation_json)
-    if 'idxs' not in df.columns:
-        mutation_not_in_interface += 1
-        return None
-    df = df[df['idxs'].notnull()]
-    df = df[df['idxs'].apply(lambda x: (tuple(sorted(x)) == idxs)).astype(bool)]
-    df.index = [index] * df.shape[0]
-    if df.empty:
-        mutation_interface_not_found += 1
-    return df
-
-
 # === SIFTS ===
 
 def get_pfam_info(sifts_df, pdb_chain, pdb_mutation):
@@ -291,4 +223,3 @@ def get_pfam_info(sifts_df, pdb_chain, pdb_mutation):
         logger.info("No 'pfam_id' data for mutation '{}'!".format(pdb_mutation))
         pfam_id = np.nan
     return uniprot_id, pfam_id
-
