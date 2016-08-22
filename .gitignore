@@ -6,12 +6,24 @@
 _*
 
 # Temporary files
-notebooks/*/**
+notebooks/*
+!notebooks/*.ipynb
+!notebooks/*.py
+!notebooks/mysqld
+notebooks/mysqld/mysql
+notebooks/mysqld/performance_schema
+notebooks/mysqld/test
+notebooks/mysqld/*.log
+notebooks/mysqld/*.info
+notebooks/mysqld/*.pid
+notebooks/mysqld/aria_log*
+notebooks/mysqld/ib_log*
+notebooks/mysqld/ibdata*
 
 # Keep downloads
-downloads/*
-!downloads/*.gz
-!downloads/*.zip
+# downloads/**/**/
+# !downloads/**/*.gz
+# !downloads/**/*.zip
 
 # Keep output
 output/*
